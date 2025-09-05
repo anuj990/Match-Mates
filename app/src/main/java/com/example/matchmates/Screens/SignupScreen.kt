@@ -1,20 +1,13 @@
 package com.example.loginui
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
@@ -22,9 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -33,6 +24,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.matchmates.ViewModel.AuthViewModel
 import com.example.matchmates.ViewModel.ProfileViewModel
 import com.example.matchmates.data.Profile
@@ -43,7 +35,7 @@ import com.example.matchmates.data.Profile
 fun SignUpScreen(
     authViewModel: AuthViewModel,
     profileViewModel: ProfileViewModel,
-    onNavigateToRegistration: () -> Unit
+    navController: NavController
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -54,22 +46,20 @@ fun SignUpScreen(
 
     val authState by authViewModel.authState.observeAsState()
 
-    // 🔑 Listen to authentication state
     LaunchedEffect(authState) {
         when (val state = authState) {
             is AuthViewModel.AuthState.Authenticated -> {
-                val user = state.user
                 val profile = Profile(
                     name = "",
-                    username = user.uid, // use uid as unique doc id
+                    username = "",
                     skills = emptyList(),
                     otherSkill = "",
                     goal = ""
                 )
                 profileViewModel.saveProfile(profile)
-
-                // ✅ Navigate to registration screen
-                onNavigateToRegistration()
+                navController.navigate("RegistrationSkillScreen") {
+                    popUpTo("SignUpScreen") { inclusive = true }
+                }
             }
             is AuthViewModel.AuthState.Error -> {
                 errorMessage = state.message
@@ -78,14 +68,16 @@ fun SignUpScreen(
         }
     }
 
-    // UI
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFCFE5E3)),
         contentAlignment = Alignment.Center
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(16.dp)) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(16.dp)
+        ) {
             Text(
                 text = "Sign Up",
                 fontSize = 22.sp,
@@ -141,20 +133,31 @@ fun SignUpScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             errorMessage?.let {
-                Text(text = it, color = MaterialTheme.colorScheme.error)
+                Text(
+                    text = it,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
                 onClick = {
-                    if (password != confirmPassword) {
-                        errorMessage = "Passwords do not match"
-                    } else if (email.isEmpty() || password.isEmpty()) {
-                        errorMessage = "Email or Password can't be empty"
-                    } else {
-                        errorMessage = null
-                        authViewModel.signUp(email, password)
+                    when {
+                        password != confirmPassword -> {
+                            errorMessage = "Passwords do not match"
+                        }
+                        email.isEmpty() || password.isEmpty() -> {
+                            errorMessage = "Email or Password can't be empty"
+                        }
+                        !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+                            errorMessage = "Invalid email format"
+                        }
+                        else -> {
+                            errorMessage = null
+                            authViewModel.signUp(email, password)
+                        }
                     }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4B3179)),
