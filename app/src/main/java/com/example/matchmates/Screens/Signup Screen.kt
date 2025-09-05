@@ -54,7 +54,7 @@ fun SignUpScreen(authViewModel: AuthViewModel) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFE0F2F1)),
+            .background(Color(0xFFCFE5E3)),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -103,7 +103,7 @@ fun SignUpScreen(authViewModel: AuthViewModel) {
                         onValueChange = { fullName = it },
                         label = { Text("Full Name") },
                         leadingIcon = {
-                            Icon(Icons.Default.AccountCircle, contentDescription = "Full Name Icon")
+                            Icon(Icons.Default.AccountCircle, contentDescription = null)
                         },
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -114,7 +114,7 @@ fun SignUpScreen(authViewModel: AuthViewModel) {
                         onValueChange = { username = it },
                         label = { Text("Username") },
                         leadingIcon = {
-                            Icon(Icons.Default.Person, contentDescription = "Username Icon")
+                            Icon(Icons.Default.Person, contentDescription =null)
                         },
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -171,19 +171,19 @@ fun SignUpScreen(authViewModel: AuthViewModel) {
                         },
                         modifier = Modifier.fillMaxWidth()
                     )
-
-                    errorMessage?.let {
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(text = it, color = Color.Red, fontSize = 14.sp)
+                    errorMessage?.let{
+                        Text(text = it, color = MaterialTheme.colorScheme.error)
                     }
-
                     Spacer(modifier = Modifier.height(20.dp))
 
                     Button(
                         onClick = {
                             if (password != confirmPassword) {
                                 errorMessage = "Passwords do not match"
-                            } else {
+                            }else if (email.isEmpty() || password.isEmpty()) {
+                                errorMessage = "Email or Password Can't Be Empty"
+                            }
+                            else {
                                 errorMessage = null
                                 authViewModel.signUp(email, password)
                             }

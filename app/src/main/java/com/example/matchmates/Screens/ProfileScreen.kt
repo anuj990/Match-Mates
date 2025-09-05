@@ -20,11 +20,9 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ProfileScreen() {
-    // States for Skills
     var isEditingSkills by remember { mutableStateOf(false) }
     var skillsText by remember { mutableStateOf("") }
 
-    // States for Goals
     var isEditingGoals by remember { mutableStateOf(false) }
     var goalsText by remember { mutableStateOf("") }
 
@@ -34,7 +32,6 @@ fun ProfileScreen() {
             .background(Color(0xFFF5F5F5))
             .padding(16.dp)
     ) {
-        // ===== Top Bar =====
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -46,7 +43,6 @@ fun ProfileScreen() {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // ===== Profile Info =====
         Column(modifier = Modifier.fillMaxWidth()) {
             Row(
                 modifier = Modifier
@@ -92,7 +88,6 @@ fun ProfileScreen() {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // ===== SKILLS Section =====
         ExpandableInputSection(
             icon = Icons.Default.Accessibility,
             title = "Skills",
@@ -107,7 +102,6 @@ fun ProfileScreen() {
 
         Divider(modifier = Modifier.padding(vertical = 8.dp))
 
-        // ===== GOALS Section =====
         ExpandableInputSection(
             icon = Icons.Default.Star,
             title = "Goals",
@@ -122,7 +116,6 @@ fun ProfileScreen() {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // ===== Logout Button =====
         Button(
             onClick = { /* Logout logic */ },
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6200EE)),
@@ -133,17 +126,10 @@ fun ProfileScreen() {
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // ===== App Version =====
-        Text(
-            text = "App Version 2.3",
-            color = Color.Gray,
-            fontSize = 12.sp,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
+
     }
 }
 
-// ========== Reusable Expandable Section ==========
 @Composable
 fun ExpandableInputSection(
     icon: ImageVector,
@@ -194,7 +180,6 @@ fun ExpandableInputSection(
     }
 }
 
-// ========== Reusable Profile Option ==========
 @Composable
 fun ProfileOption(
     icon: ImageVector,
@@ -211,7 +196,11 @@ fun ProfileOption(
         Icon(icon, contentDescription = title, modifier = Modifier.size(24.dp))
         Spacer(modifier = Modifier.width(16.dp))
         Text(title, fontSize = 16.sp, modifier = Modifier.weight(1f))
-        Icon(Icons.Default.ArrowForwardIos, contentDescription = "Arrow", modifier = Modifier.size(16.dp))
+        Icon(
+            Icons.Default.ArrowForwardIos,
+            contentDescription = "Arrow",
+            modifier = Modifier.size(16.dp)
+        )
     }
 }
 

@@ -42,7 +42,6 @@ fun RegistrationScreen() {
             verticalArrangement = Arrangement.spacedBy(20.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
-            // Profile circle
             Box(
                 modifier = Modifier
                     .size(120.dp)
@@ -62,7 +61,6 @@ fun RegistrationScreen() {
                 }
             }
 
-            // Add Image button
             Button(
                 onClick = { imageSelected = !imageSelected },
                 colors = ButtonDefaults.buttonColors(
@@ -73,7 +71,6 @@ fun RegistrationScreen() {
                 Text("Add Image")
             }
 
-            // ========= Skills (Multi-select with checkboxes) =========
             ExposedDropdownMenuBox(
                 expanded = skillExpanded,
                 onExpandedChange = { skillExpanded = !skillExpanded }
@@ -120,14 +117,12 @@ fun RegistrationScreen() {
                                         selectedSkills - skill
                                     else
                                         selectedSkills + skill
-                                // keep menu open for multi-select; don't change skillExpanded here
                             }
                         )
                     }
                 }
             }
 
-            // Other Skill input
             OutlinedTextField(
                 value = otherSkill,
                 onValueChange = { otherSkill = it },
@@ -143,7 +138,6 @@ fun RegistrationScreen() {
                 )
             )
 
-            // ========= Goal (Single-select) =========
             ExposedDropdownMenuBox(
                 expanded = goalExpanded,
                 onExpandedChange = { goalExpanded = !goalExpanded }
@@ -156,7 +150,7 @@ fun RegistrationScreen() {
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = goalExpanded) },
                     modifier = Modifier
                         .fillMaxWidth(0.8f)
-                        .menuAnchor(MenuAnchorType.PrimaryNotEditable) // ✅ new API
+                        .menuAnchor(MenuAnchorType.PrimaryNotEditable)
                         .exposedDropdownSize(),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color.Black,
@@ -177,14 +171,13 @@ fun RegistrationScreen() {
                             text = { Text(goal, color = Color.Black) },
                             onClick = {
                                 selectedGoal = goal
-                                goalExpanded = false // single-select: close on pick
+                                goalExpanded = false
                             }
                         )
                     }
                 }
             }
 
-            // Continue button
             Button(
                 onClick = {
                     println("Selected Skills: $selectedSkills")
