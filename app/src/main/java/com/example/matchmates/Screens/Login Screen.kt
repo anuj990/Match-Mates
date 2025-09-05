@@ -1,46 +1,54 @@
 package com.example.matchmates.Screens
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Villa
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
+import com.example.matchmates.ViewModel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview(showBackground = true, showSystemUi = true)
-fun LoginScreen() {
-    var username by remember { mutableStateOf("") }
+fun LoginScreen(authViewModel: AuthViewModel) {
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var showPassword by remember { mutableStateOf(false) }
+
+    val authState by authViewModel.authState.observeAsState()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFE0F2F1)), // light teal background
+            .background(Color(0xFFE0F2F1)),
         contentAlignment = Alignment.Center
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .padding(16.dp)
+            modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "Login in your Account",
+                text = "Login to your Account", // Changed text to Login
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF1A237E)
@@ -48,7 +56,6 @@ fun LoginScreen() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Profile icon inside circle
             Box(
                 modifier = Modifier
                     .size(80.dp)
@@ -62,8 +69,6 @@ fun LoginScreen() {
                     tint = Color.White,
                     modifier = Modifier.size(40.dp)
                 )
-
-
             }
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -73,22 +78,20 @@ fun LoginScreen() {
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 shape = RoundedCornerShape(12.dp),
-                elevation = CardDefaults.cardElevation(6.dp)
+                elevation = CardDefaults.cardElevation(8.dp)
             ) {
                 Column(
-                    modifier = Modifier
-                        .padding(16.dp),
+                    modifier = Modifier.padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // Username field
                     OutlinedTextField(
-                        value = username,
-                        onValueChange = { username = it },
+                        value = email,
+                        onValueChange = { email = it },
                         label = { Text("Email Id") },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Person,
-                                contentDescription = "User Icon"
+                                contentDescription = null
                             )
                         },
                         modifier = Modifier.fillMaxWidth()
@@ -96,19 +99,32 @@ fun LoginScreen() {
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    // Password field
                     OutlinedTextField(
                         value = password,
                         onValueChange = { password = it },
                         label = { Text("Password") },
-                        visualTransformation = PasswordVisualTransformation(),
+                        visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Lock,
-                                contentDescription = "Password Icon"
+                                contentDescription = null
                             )
                         },
-                        modifier = Modifier.fillMaxWidth()
+                        trailingIcon = {
+                            val image = if (showPassword) Icons.Default.Visibility
+                            else Icons.Default.VisibilityOff
+
+                            val description = if (showPassword) "Hide password" else "Show password"
+
+                            IconButton(onClick = { showPassword = !showPassword }) {
+                                Icon(imageVector = image, contentDescription = description)
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Done
+                        )
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -124,7 +140,9 @@ fun LoginScreen() {
                     Spacer(modifier = Modifier.height(20.dp))
 
                     Button(
-                        onClick = {},
+                        onClick = {
+                            authViewModel.login(email, password)
+                        },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(0xFFFF5722)
                         ),
@@ -137,4 +155,9 @@ fun LoginScreen() {
             }
         }
     }
+}
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun LoginScreenPreview() {
+    LoginScreen(authViewModel = AuthViewModel())
 }
