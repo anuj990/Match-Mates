@@ -8,7 +8,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Villa
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
@@ -23,19 +22,30 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.matchmates.ViewModel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(authViewModel: AuthViewModel) {
+fun LoginScreen(authViewModel: AuthViewModel, navController: NavHostController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showPassword by remember { mutableStateOf(false) }
-
     val authState by authViewModel.authState.observeAsState()
+
+    // ✅ handle navigation after login
+    LaunchedEffect(authState) {
+        when (authState) {
+            is AuthViewModel.AuthState.Authenticated -> {
+                navController.navigate("HomeScreen") {
+                    popUpTo("LoginScreen") { inclusive = true }
+                }
+            }
+            else -> {}
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -48,7 +58,7 @@ fun LoginScreen(authViewModel: AuthViewModel) {
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "Login to your Account", // Changed text to Login
+                text = "Login to your Account",
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF1A237E)
@@ -88,12 +98,7 @@ fun LoginScreen(authViewModel: AuthViewModel) {
                         value = email,
                         onValueChange = { email = it },
                         label = { Text("Email Id") },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Person,
-                                contentDescription = null
-                            )
-                        },
+                        leadingIcon = { Icon(imageVector = Icons.Default.Person, contentDescription = null) },
                         modifier = Modifier.fillMaxWidth()
                     )
 
@@ -104,18 +109,10 @@ fun LoginScreen(authViewModel: AuthViewModel) {
                         onValueChange = { password = it },
                         label = { Text("Password") },
                         visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Lock,
-                                contentDescription = null
-                            )
-                        },
+                        leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = null) },
                         trailingIcon = {
-                            val image = if (showPassword) Icons.Default.Visibility
-                            else Icons.Default.VisibilityOff
-
+                            val image = if (showPassword) Icons.Default.Visibility else Icons.Default.VisibilityOff
                             val description = if (showPassword) "Hide password" else "Show password"
-
                             IconButton(onClick = { showPassword = !showPassword }) {
                                 Icon(imageVector = image, contentDescription = description)
                             }
@@ -140,24 +137,21 @@ fun LoginScreen(authViewModel: AuthViewModel) {
                     Spacer(modifier = Modifier.height(20.dp))
 
                     Button(
-                        onClick = {
-                            authViewModel.login(email, password)
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFFF5722)
-                        ),
+                        onClick = { authViewModel.login(email, password) },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF5722)),
                         shape = RoundedCornerShape(8.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(text = "Login", color = Color.White)
                     }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    TextButton(onClick = { navController.navigate("Registration") }) {
+                        Text("Don’t have an account? Register", color = Color(0xFF1A237E))
+                    }
                 }
             }
         }
     }
-}
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun LoginScreenPreview() {
-    LoginScreen(authViewModel = AuthViewModel())
 }
