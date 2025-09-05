@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -15,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.material3.MenuAnchorType // ✅ new anchor type
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -23,7 +23,7 @@ fun RegistrationScreen() {
 
     val skills = listOf("Android", "Web", "ML", "UI/UX", "DSA")
     var skillExpanded by remember { mutableStateOf(false) }
-    var selectedSkill by remember { mutableStateOf<String?>(null) }
+    var selectedSkills by remember { mutableStateOf(setOf<String>()) }
 
     val goals = listOf("Win", "Learn", "Fun", "Networking")
     var goalExpanded by remember { mutableStateOf(false) }
@@ -62,7 +62,7 @@ fun RegistrationScreen() {
                 }
             }
 
-            // Add Image button (currently just toggles placeholder)
+            // Add Image button
             Button(
                 onClick = { imageSelected = !imageSelected },
                 colors = ButtonDefaults.buttonColors(
@@ -73,26 +73,21 @@ fun RegistrationScreen() {
                 Text("Add Image")
             }
 
-            // Skill Dropdown
+            // ========= Skills (Multi-select with checkboxes) =========
             ExposedDropdownMenuBox(
                 expanded = skillExpanded,
                 onExpandedChange = { skillExpanded = !skillExpanded }
             ) {
                 OutlinedTextField(
-                    value = selectedSkill ?: "",
+                    value = if (selectedSkills.isEmpty()) "" else selectedSkills.joinToString(", "),
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text("Select Skill", color = Color.Black) },
-                    trailingIcon = {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowDropDown,
-                            contentDescription = null,
-                            tint = Color.Black
-                        )
-                    },
+                    label = { Text("Select Skills", color = Color.Black) },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = skillExpanded) },
                     modifier = Modifier
-                        .menuAnchor()
-                        .fillMaxWidth(0.8f),
+                        .fillMaxWidth(0.8f)
+                        .menuAnchor(MenuAnchorType.PrimaryNotEditable) // ✅ new API
+                        .exposedDropdownSize(),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color.Black,
                         unfocusedBorderColor = Color.Black,
@@ -109,10 +104,23 @@ fun RegistrationScreen() {
                 ) {
                     skills.forEach { skill ->
                         DropdownMenuItem(
-                            text = { Text(skill, color = Color.Black) },
+                            text = {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Checkbox(
+                                        checked = selectedSkills.contains(skill),
+                                        onCheckedChange = null
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(skill, color = Color.Black)
+                                }
+                            },
                             onClick = {
-                                selectedSkill = skill
-                                skillExpanded = false
+                                selectedSkills =
+                                    if (selectedSkills.contains(skill))
+                                        selectedSkills - skill
+                                    else
+                                        selectedSkills + skill
+                                // keep menu open for multi-select; don't change skillExpanded here
                             }
                         )
                     }
@@ -135,7 +143,7 @@ fun RegistrationScreen() {
                 )
             )
 
-            // Goal Dropdown
+            // ========= Goal (Single-select) =========
             ExposedDropdownMenuBox(
                 expanded = goalExpanded,
                 onExpandedChange = { goalExpanded = !goalExpanded }
@@ -145,16 +153,11 @@ fun RegistrationScreen() {
                     onValueChange = {},
                     readOnly = true,
                     label = { Text("Select Goal", color = Color.Black) },
-                    trailingIcon = {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowDropDown,
-                            contentDescription = null,
-                            tint = Color.Black
-                        )
-                    },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = goalExpanded) },
                     modifier = Modifier
-                        .menuAnchor()
-                        .fillMaxWidth(0.8f),
+                        .fillMaxWidth(0.8f)
+                        .menuAnchor(MenuAnchorType.PrimaryNotEditable) // ✅ new API
+                        .exposedDropdownSize(),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color.Black,
                         unfocusedBorderColor = Color.Black,
@@ -174,7 +177,7 @@ fun RegistrationScreen() {
                             text = { Text(goal, color = Color.Black) },
                             onClick = {
                                 selectedGoal = goal
-                                goalExpanded = false
+                                goalExpanded = false // single-select: close on pick
                             }
                         )
                     }
@@ -184,7 +187,9 @@ fun RegistrationScreen() {
             // Continue button
             Button(
                 onClick = {
-                    // Example: Use selectedSkill, otherSkill, and selectedGoal
+                    println("Selected Skills: $selectedSkills")
+                    println("Other Skill: $otherSkill")
+                    println("Selected Goal: $selectedGoal")
                 },
                 modifier = Modifier.fillMaxWidth(0.8f),
                 colors = ButtonDefaults.buttonColors(
