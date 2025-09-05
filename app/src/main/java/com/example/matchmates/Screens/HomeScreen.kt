@@ -41,15 +41,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         topBar = {
             TopAppBar(
                 title = { Text(text = "Match Mates", modifier = Modifier.padding(start = 28.dp)) },
-                navigationIcon = {
-                    IconButton(onClick = {}) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = "Menu",
-                            modifier = Modifier.size(28.dp)
-                        )
-                    }
-                },
+
                 actions = {
                     IconButton(onClick = {}) {
                         Icon(
@@ -64,12 +56,12 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             )
         },
         bottomBar = {
-            BottomAppBar(containerColor = BottomAppBarDefaults.containerColor){
+            BottomAppBar(containerColor = BottomAppBarDefaults.containerColor) {
                 Row(
                     modifier = Modifier.weight(1f),
                     horizontalArrangement = Arrangement.SpaceAround,
                     verticalAlignment = Alignment.CenterVertically
-                ){
+                ) {
                     IconButton(onClick = {}) {
                         Icon(
                             imageVector = Icons.Default.Home,
@@ -77,19 +69,17 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                             modifier = Modifier.size(32.dp)
                         )
                     }
-                    IconButton(onClick = {
 
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = null,
-                            modifier = Modifier.size(40.dp)
-
-                            )
-                    }
                     IconButton(onClick = {}) {
                         Icon(
                             imageVector = Icons.Default.Groups,
+                            contentDescription = null,
+                            modifier = Modifier.size(28.dp)
+                        )
+                    }
+                    IconButton(onClick = {}) {
+                        Icon(
+                            imageVector = Icons.Default.Chat,
                             contentDescription = null,
                             modifier = Modifier.size(28.dp)
                         )
