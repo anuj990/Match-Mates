@@ -34,33 +34,58 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.matchmates.ViewModel.AuthViewModel
+import com.example.matchmates.ViewModel.ProfileViewModel
+import com.example.matchmates.data.Profile
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpScreen(authViewModel: AuthViewModel) {
-    var fullName by remember { mutableStateOf("") }
-    var username by remember { mutableStateOf("") }
+fun SignUpScreen(
+    authViewModel: AuthViewModel,
+    profileViewModel: ProfileViewModel,
+    onNavigateToRegistration: () -> Unit
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var showPassword by remember { mutableStateOf(false) }
-    var showconfirmPassword by remember { mutableStateOf(false) }
-
+    var showConfirmPassword by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
     val authState by authViewModel.authState.observeAsState()
 
+    // 🔑 Listen to authentication state
+    LaunchedEffect(authState) {
+        when (val state = authState) {
+            is AuthViewModel.AuthState.Authenticated -> {
+                val user = state.user
+                val profile = Profile(
+                    name = "",
+                    username = user.uid, // use uid as unique doc id
+                    skills = emptyList(),
+                    otherSkill = "",
+                    goal = ""
+                )
+                profileViewModel.saveProfile(profile)
+
+                // ✅ Navigate to registration screen
+                onNavigateToRegistration()
+            }
+            is AuthViewModel.AuthState.Error -> {
+                errorMessage = state.message
+            }
+            else -> {}
+        }
+    }
+
+    // UI
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFCFE5E3)),
         contentAlignment = Alignment.Center
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(16.dp)
-        ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(16.dp)) {
             Text(
                 text = "Sign Up",
                 fontSize = 22.sp,
@@ -70,133 +95,73 @@ fun SignUpScreen(authViewModel: AuthViewModel) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Box(
-                modifier = Modifier
-                    .size(80.dp)
-                    .clip(CircleShape)
-                    .background(Color(0xFF1A237E)),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Person,
-                    contentDescription = "Profile",
-                    tint = Color.White,
-                    modifier = Modifier.size(40.dp)
-                )
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Email Id") },
+                leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Password") },
+                visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
+                leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = null) },
+                trailingIcon = {
+                    val image = if (showPassword) Icons.Default.Visibility else Icons.Default.VisibilityOff
+                    IconButton(onClick = { showPassword = !showPassword }) {
+                        Icon(imageVector = image, contentDescription = null)
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next)
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            OutlinedTextField(
+                value = confirmPassword,
+                onValueChange = { confirmPassword = it },
+                label = { Text("Confirm Password") },
+                visualTransformation = if (showConfirmPassword) VisualTransformation.None else PasswordVisualTransformation(),
+                leadingIcon = { Icon(Icons.Default.CheckCircle, contentDescription = null) },
+                trailingIcon = {
+                    val image = if (showConfirmPassword) Icons.Default.Visibility else Icons.Default.VisibilityOff
+                    IconButton(onClick = { showConfirmPassword = !showConfirmPassword }) {
+                        Icon(imageVector = image, contentDescription = null)
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            errorMessage?.let {
+                Text(text = it, color = MaterialTheme.colorScheme.error)
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                shape = RoundedCornerShape(12.dp),
-                elevation = CardDefaults.cardElevation(8.dp)
+            Button(
+                onClick = {
+                    if (password != confirmPassword) {
+                        errorMessage = "Passwords do not match"
+                    } else if (email.isEmpty() || password.isEmpty()) {
+                        errorMessage = "Email or Password can't be empty"
+                    } else {
+                        errorMessage = null
+                        authViewModel.signUp(email, password)
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4B3179)),
+                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    OutlinedTextField(
-                        value = fullName,
-                        onValueChange = { fullName = it },
-                        label = { Text("Full Name") },
-                        leadingIcon = {
-                            Icon(Icons.Default.AccountCircle, contentDescription = null)
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    OutlinedTextField(
-                        value = username,
-                        onValueChange = { username = it },
-                        label = { Text("Username") },
-                        leadingIcon = {
-                            Icon(Icons.Default.Person, contentDescription =null)
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    OutlinedTextField(
-                        value = email,
-                        onValueChange = { email = it },
-                        label = { Text("Email Id") },
-                        leadingIcon = {
-                            Icon(Icons.Default.Email, contentDescription = "Email Icon")
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    OutlinedTextField(
-                        value = password,
-                        onValueChange = { password = it },
-                        label = { Text("Password") },
-                        visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
-                        leadingIcon = {
-                            Icon(imageVector = Icons.Default.Lock, contentDescription = null)
-                        },
-                        trailingIcon = {
-                            val image = if (showPassword) Icons.Default.Visibility
-                            else Icons.Default.VisibilityOff
-                            IconButton(onClick = { showPassword = !showPassword }) {
-                                Icon(imageVector = image, contentDescription = null)
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Password,
-                            imeAction = ImeAction.Next
-                        )
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    OutlinedTextField(
-                        value = confirmPassword,
-                        onValueChange = { confirmPassword = it },
-                        label = { Text("Confirm Password") },
-                        visualTransformation = if (showconfirmPassword) VisualTransformation.None else PasswordVisualTransformation(),
-                        leadingIcon = {
-                            Icon(Icons.Default.CheckCircle, contentDescription = "Confirm Password Icon")
-                        },
-                        trailingIcon = {
-                            val image = if (showconfirmPassword) Icons.Default.Visibility
-                            else Icons.Default.VisibilityOff
-                            IconButton(onClick = { showconfirmPassword = !showconfirmPassword }) {
-                                Icon(imageVector = image, contentDescription = null)
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    errorMessage?.let{
-                        Text(text = it, color = MaterialTheme.colorScheme.error)
-                    }
-                    Spacer(modifier = Modifier.height(20.dp))
-
-                    Button(
-                        onClick = {
-                            if (password != confirmPassword) {
-                                errorMessage = "Passwords do not match"
-                            }else if (email.isEmpty() || password.isEmpty()) {
-                                errorMessage = "Email or Password Can't Be Empty"
-                            }
-                            else {
-                                errorMessage = null
-                                authViewModel.signUp(email, password)
-                            }
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF4B3179)
-                        ),
-                        shape = RoundedCornerShape(8.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(text = "Sign Up", color = Color.White)
-                    }
-                }
+                Text(text = "Sign Up", color = Color.White)
             }
         }
     }
