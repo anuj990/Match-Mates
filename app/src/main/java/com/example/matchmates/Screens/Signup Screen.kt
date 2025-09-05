@@ -8,58 +8,43 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.matchmates.ViewModel.AuthViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpScreen(authViewModel: AuthViewModel) {
-    var fullName by remember { mutableStateOf("") }
+@Preview(showBackground = true, showSystemUi = true)
+fun LoginScreen() {
     var username by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    var showPassword by remember { mutableStateOf(false) }
-    var showconfirmPassword by remember { mutableStateOf(false) }
-
-    var errorMessage by remember { mutableStateOf<String?>(null) }
-
-    val authState by authViewModel.authState.observeAsState()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFCFE5E3)),
+            .background(Color(0xFFE0F2F1)), // light teal background
         contentAlignment = Alignment.Center
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .padding(16.dp)
         ) {
             Text(
                 text = "Sign Up",
@@ -70,6 +55,7 @@ fun SignUpScreen(authViewModel: AuthViewModel) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Profile icon inside circle
             Box(
                 modifier = Modifier
                     .size(80.dp)
@@ -92,18 +78,23 @@ fun SignUpScreen(authViewModel: AuthViewModel) {
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 shape = RoundedCornerShape(12.dp),
-                elevation = CardDefaults.cardElevation(8.dp)
+                elevation = CardDefaults.cardElevation(6.dp)
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier
+                        .padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    // Username field
                     OutlinedTextField(
-                        value = fullName,
-                        onValueChange = { fullName = it },
+                        value = username,
+                        onValueChange = { username = it },
                         label = { Text("Full Name") },
                         leadingIcon = {
-                            Icon(Icons.Default.AccountCircle, contentDescription = null)
+                            Icon(
+                                imageVector = Icons.Default.AccountCircle,
+                                contentDescription = "User Icon"
+                            )
                         },
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -114,87 +105,74 @@ fun SignUpScreen(authViewModel: AuthViewModel) {
                         onValueChange = { username = it },
                         label = { Text("Username") },
                         leadingIcon = {
-                            Icon(Icons.Default.Person, contentDescription =null)
+                            Icon(
+                                imageVector = Icons.Default.Person,
+                                contentDescription = "User Icon"
+                            )
                         },
                         modifier = Modifier.fillMaxWidth()
                     )
+
                     Spacer(modifier = Modifier.height(12.dp))
+
+                        // Username field
 
                     OutlinedTextField(
-                        value = email,
-                        onValueChange = { email = it },
-                        label = { Text("Email Id") },
-                        leadingIcon = {
-                            Icon(Icons.Default.Email, contentDescription = "Email Icon")
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                            value = username,
+                            onValueChange = { username = it },
+                            label = { Text("Email Id") },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Email,
+                                    contentDescription = "User Icon"
+                                )
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
                     Spacer(modifier = Modifier.height(12.dp))
 
+                    // Password field
                     OutlinedTextField(
                         value = password,
                         onValueChange = { password = it },
                         label = { Text("Password") },
-                        visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
+                        visualTransformation = PasswordVisualTransformation(),
                         leadingIcon = {
-                            Icon(imageVector = Icons.Default.Lock, contentDescription = null)
-                        },
-                        trailingIcon = {
-                            val image = if (showPassword) Icons.Default.Visibility
-                            else Icons.Default.VisibilityOff
-                            IconButton(onClick = { showPassword = !showPassword }) {
-                                Icon(imageVector = image, contentDescription = null)
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Password,
-                            imeAction = ImeAction.Next
-                        )
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    OutlinedTextField(
-                        value = confirmPassword,
-                        onValueChange = { confirmPassword = it },
-                        label = { Text("Confirm Password") },
-                        visualTransformation = if (showconfirmPassword) VisualTransformation.None else PasswordVisualTransformation(),
-                        leadingIcon = {
-                            Icon(Icons.Default.CheckCircle, contentDescription = "Confirm Password Icon")
-                        },
-                        trailingIcon = {
-                            val image = if (showconfirmPassword) Icons.Default.Visibility
-                            else Icons.Default.VisibilityOff
-                            IconButton(onClick = { showconfirmPassword = !showconfirmPassword }) {
-                                Icon(imageVector = image, contentDescription = null)
-                            }
+                            Icon(
+                                imageVector = Icons.Default.Lock,
+                                contentDescription = "Password Icon"
+                            )
                         },
                         modifier = Modifier.fillMaxWidth()
                     )
-                    errorMessage?.let{
-                        Text(text = it, color = MaterialTheme.colorScheme.error)
-                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    OutlinedTextField(
+                        value = username,
+                        onValueChange = { username = it },
+                        label = { Text("Confirm Password") },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.CheckCircle,
+                                contentDescription = "User Icon"
+                            )
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+
                     Spacer(modifier = Modifier.height(20.dp))
 
                     Button(
-                        onClick = {
-                            if (password != confirmPassword) {
-                                errorMessage = "Passwords do not match"
-                            }else if (email.isEmpty() || password.isEmpty()) {
-                                errorMessage = "Email or Password Can't Be Empty"
-                            }
-                            else {
-                                errorMessage = null
-                                authViewModel.signUp(email, password)
-                            }
-                        },
+                        onClick = { /* TODO: Add login logic */ },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF4B3179)
+                            containerColor = Color(0xFF4B3179) // orange button
                         ),
                         shape = RoundedCornerShape(8.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(text = "Sign Up", color = Color.White)
+                        Text(text = "Sign In", color = Color.White)
                     }
                 }
             }
