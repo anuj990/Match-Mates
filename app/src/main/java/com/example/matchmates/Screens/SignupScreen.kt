@@ -1,9 +1,5 @@
 package com.example.loginui
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -24,13 +20,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.matchmates.ViewModel.AuthViewModel
@@ -38,7 +32,10 @@ import com.example.matchmates.ViewModel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpScreen(authViewModel: AuthViewModel) {
+fun SignUpScreen(
+    authViewModel: AuthViewModel,
+    navController: androidx.navigation.NavHostController
+) {
     var fullName by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -180,12 +177,12 @@ fun SignUpScreen(authViewModel: AuthViewModel) {
                         onClick = {
                             if (password != confirmPassword) {
                                 errorMessage = "Passwords do not match"
-                            }else if (email.isEmpty() || password.isEmpty()) {
+                            } else if (email.isEmpty() || password.isEmpty()) {
                                 errorMessage = "Email or Password Can't Be Empty"
-                            }
-                            else {
+                            } else {
                                 errorMessage = null
                                 authViewModel.signUp(email, password)
+                                navController.navigate("RegistrationSkillScreen")
                             }
                         },
                         colors = ButtonDefaults.buttonColors(

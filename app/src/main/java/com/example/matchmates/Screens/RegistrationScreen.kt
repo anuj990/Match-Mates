@@ -18,7 +18,7 @@ import androidx.compose.material3.MenuAnchorType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegistrationScreen() {
+fun RegistrationScreen(navController: androidx.navigation.NavHostController) {
     var imageSelected by remember { mutableStateOf(false) }
 
     val skills = listOf("Android", "Web", "ML", "UI/UX", "DSA")
@@ -83,7 +83,7 @@ fun RegistrationScreen() {
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = skillExpanded) },
                     modifier = Modifier
                         .fillMaxWidth(0.8f)
-                        .menuAnchor(MenuAnchorType.PrimaryNotEditable) // ✅ new API
+                        .menuAnchor(MenuAnchorType.PrimaryNotEditable)
                         .exposedDropdownSize(),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color.Black,
@@ -183,6 +183,7 @@ fun RegistrationScreen() {
                     println("Selected Skills: $selectedSkills")
                     println("Other Skill: $otherSkill")
                     println("Selected Goal: $selectedGoal")
+                    navController.navigate("HomeScreen") // navigation added here
                 },
                 modifier = Modifier.fillMaxWidth(0.8f),
                 colors = ButtonDefaults.buttonColors(
@@ -199,5 +200,5 @@ fun RegistrationScreen() {
 @Preview(showBackground = true)
 @Composable
 fun RegistrationScreenPreview() {
-    RegistrationScreen()
+    RegistrationScreen(navController = androidx.navigation.compose.rememberNavController())
 }

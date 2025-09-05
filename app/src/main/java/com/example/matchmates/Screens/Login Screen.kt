@@ -30,7 +30,7 @@ import com.example.matchmates.ViewModel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(authViewModel: AuthViewModel) {
+fun LoginScreen(authViewModel: AuthViewModel, navController: androidx.navigation.NavHostController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showPassword by remember { mutableStateOf(false) }
@@ -48,7 +48,7 @@ fun LoginScreen(authViewModel: AuthViewModel) {
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "Login to your Account", // Changed text to Login
+                text = "Login to your Account",
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF1A237E)
@@ -142,6 +142,7 @@ fun LoginScreen(authViewModel: AuthViewModel) {
                     Button(
                         onClick = {
                             authViewModel.login(email, password)
+                            navController.navigate("HomeScreen") // navigation added here
                         },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(0xFFFF5722)
@@ -156,8 +157,4 @@ fun LoginScreen(authViewModel: AuthViewModel) {
         }
     }
 }
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun LoginScreenPreview() {
-    LoginScreen(authViewModel = AuthViewModel())
-}
+

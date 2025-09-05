@@ -34,24 +34,23 @@ import kotlin.contracts.contract
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun HomeScreen(
+    navController: androidx.navigation.NavHostController,
+) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(text = "Match Mates", modifier = Modifier.padding(start = 28.dp)) },
 
                 actions = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = { navController.navigate("SearchScreen") }) {
                         Icon(
                             imageVector = Icons.Default.Search,
                             contentDescription = "Search",
                             modifier = Modifier.size(28.dp)
                         )
                     }
-
-
                 }
             )
         },
@@ -62,7 +61,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                     horizontalArrangement = Arrangement.SpaceAround,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = { navController.navigate("HomeScreen") }) {
                         Icon(
                             imageVector = Icons.Default.Home,
                             contentDescription = null,
@@ -70,21 +69,23 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                         )
                     }
 
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = { navController.navigate("CommunityScreen") }) {
                         Icon(
                             imageVector = Icons.Default.Groups,
                             contentDescription = null,
                             modifier = Modifier.size(28.dp)
                         )
                     }
-                    IconButton(onClick = {}) {
+
+                    IconButton(onClick = { navController.navigate("ChatScreen") }) {
                         Icon(
                             imageVector = Icons.Default.Chat,
                             contentDescription = null,
                             modifier = Modifier.size(28.dp)
                         )
                     }
-                    IconButton(onClick = {}) {
+
+                    IconButton(onClick = { navController.navigate("ProfileScreen") }) {
                         Icon(
                             imageVector = Icons.Default.AccountCircle,
                             contentDescription = null,

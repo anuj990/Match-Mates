@@ -17,9 +17,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(navController: NavController) {
     var isEditingSkills by remember { mutableStateOf(false) }
     var skillsText by remember { mutableStateOf("") }
 
@@ -38,7 +40,9 @@ fun ProfileScreen() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text("My Profile", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            Icon(imageVector = Icons.Default.Settings, contentDescription = "Settings")
+            IconButton(onClick = { navController.navigate("EditProfileScreen") }) {
+                Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit", tint = Color.Gray)
+            }
         }
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -80,9 +84,6 @@ fun ProfileScreen() {
                     }
                 }
 
-                IconButton(onClick = { /* Edit logic */ }) {
-                    Icon(Icons.Default.Edit, contentDescription = "Edit", tint = Color.Gray)
-                }
             }
         }
 
@@ -95,9 +96,7 @@ fun ProfileScreen() {
             textValue = skillsText,
             onToggle = { isEditingSkills = !isEditingSkills },
             onValueChange = { skillsText = it },
-            onSave = {
-                isEditingSkills = false
-            }
+            onSave = { isEditingSkills = false }
         )
 
         Divider(modifier = Modifier.padding(vertical = 8.dp))
@@ -109,9 +108,7 @@ fun ProfileScreen() {
             textValue = goalsText,
             onToggle = { isEditingGoals = !isEditingGoals },
             onValueChange = { goalsText = it },
-            onSave = {
-                isEditingGoals = false
-            }
+            onSave = { isEditingGoals = false }
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -125,8 +122,6 @@ fun ProfileScreen() {
         }
 
         Spacer(modifier = Modifier.weight(1f))
-
-
     }
 }
 
@@ -141,11 +136,7 @@ fun ExpandableInputSection(
     onSave: () -> Unit
 ) {
     Column {
-        ProfileOption(
-            icon = icon,
-            title = title,
-            onClick = onToggle
-        )
+        ProfileOption(icon = icon, title = title, onClick = onToggle)
 
         if (isEditing) {
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
@@ -160,10 +151,7 @@ fun ExpandableInputSection(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Button(
-                    onClick = onSave,
-                    modifier = Modifier.align(Alignment.End)
-                ) {
+                Button(onClick = onSave, modifier = Modifier.align(Alignment.End)) {
                     Text("Save")
                 }
 
@@ -181,11 +169,7 @@ fun ExpandableInputSection(
 }
 
 @Composable
-fun ProfileOption(
-    icon: ImageVector,
-    title: String,
-    onClick: () -> Unit = {}
-) {
+fun ProfileOption(icon: ImageVector, title: String, onClick: () -> Unit = {}) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -196,16 +180,12 @@ fun ProfileOption(
         Icon(icon, contentDescription = title, modifier = Modifier.size(24.dp))
         Spacer(modifier = Modifier.width(16.dp))
         Text(title, fontSize = 16.sp, modifier = Modifier.weight(1f))
-        Icon(
-            Icons.Default.ArrowForwardIos,
-            contentDescription = "Arrow",
-            modifier = Modifier.size(16.dp)
-        )
+        Icon(Icons.Default.ArrowForwardIos, contentDescription = "Arrow", modifier = Modifier.size(16.dp))
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewProfileScreen() {
-    ProfileScreen()
+    ProfileScreen(navController = rememberNavController())
 }

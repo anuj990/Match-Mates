@@ -1,8 +1,5 @@
-package com.example.editprofile
+package com.example.matchmates.Screens
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -21,27 +18,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            MaterialTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    EditProfileScreen()
-                }
-            }
-        }
-    }
-}
+import androidx.navigation.NavHostController
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun EditProfileScreen() {
+fun EditProfileScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -53,7 +34,7 @@ fun EditProfileScreen() {
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { /* Handle back */ }) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = "Back"
@@ -75,7 +56,6 @@ fun EditProfileScreen() {
                 .padding(16.dp)
         ) {
 
-            // -------- Profile Pic --------
             Icon(
                 imageVector = Icons.Default.Person,
                 contentDescription = "Profile",
@@ -89,7 +69,6 @@ fun EditProfileScreen() {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // -------- Input Fields --------
             var fullName by remember { mutableStateOf("") }
             var username by remember { mutableStateOf("") }
             var email by remember { mutableStateOf("") }
@@ -133,7 +112,6 @@ fun EditProfileScreen() {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // -------- Birth Dropdown --------
             ExposedDropdownMenuBox(expanded = false, onExpandedChange = {}) {
                 OutlinedTextField(
                     value = birth,
@@ -147,7 +125,6 @@ fun EditProfileScreen() {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // -------- Gender Dropdown --------
             ExposedDropdownMenuBox(expanded = false, onExpandedChange = {}) {
                 OutlinedTextField(
                     value = gender,
@@ -161,9 +138,8 @@ fun EditProfileScreen() {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // -------- Change Password Button --------
             Button(
-                onClick = { /* Change Password */ },
+                onClick = { /* Handle Change Password */ },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),
@@ -176,4 +152,11 @@ fun EditProfileScreen() {
             }
         }
     }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun EditProfilePreview() {
+    // Using a fake NavController for preview
+    EditProfileScreen(navController = androidx.navigation.compose.rememberNavController())
 }
