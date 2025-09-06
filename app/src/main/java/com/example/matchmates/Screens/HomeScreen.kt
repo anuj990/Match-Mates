@@ -18,13 +18,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.matchmates.ViewModel.ProfileViewModel
 
-data class HardcodedProfile(
-    val name: String,
-    val username: String,
-    val skills: List<String>,
-    val otherSkill: String = "",
-    val goal: String
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

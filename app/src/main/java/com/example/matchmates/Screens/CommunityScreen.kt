@@ -75,7 +75,6 @@ fun CommunityScreen() {
                 singleLine = true
             )
 
-            // Hackathon list
             LazyColumn(
                 state = listState,
                 modifier = Modifier.fillMaxSize(),

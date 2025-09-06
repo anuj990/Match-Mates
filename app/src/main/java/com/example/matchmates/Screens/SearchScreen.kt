@@ -49,7 +49,8 @@ fun SearchScreen(navController: NavHostController) {
                 value = query,
                 onValueChange = { query = it },
                 label = { Text("Search by name, skill, or goal") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(30.dp)
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -86,3 +87,10 @@ fun SearchScreen(navController: NavHostController) {
         }
     }
 }
+data class HardcodedProfile(
+    val name: String,
+    val username: String,
+    val skills: List<String>,
+    val otherSkill: String,
+    val goal: String
+)

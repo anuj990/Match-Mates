@@ -63,7 +63,7 @@ fun EditProfileScreen(navController: NavController) {
                 modifier = Modifier
                     .size(75.dp)
                     .clip(CircleShape)
-                    .background(Color(0xFF6853E0))
+                    .background(Color(0xFF3C85DA))
                     .padding(12.dp)
             )
 
@@ -80,7 +80,8 @@ fun EditProfileScreen(navController: NavController) {
                 value = fullName,
                 onValueChange = { fullName = it },
                 label = { Text("Full Name") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(30.dp)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -89,7 +90,8 @@ fun EditProfileScreen(navController: NavController) {
                 value = username,
                 onValueChange = { username = it },
                 label = { Text("Username") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(30.dp)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -98,7 +100,8 @@ fun EditProfileScreen(navController: NavController) {
                 value = email,
                 onValueChange = { email = it },
                 label = { Text("Email") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(30.dp)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -107,7 +110,8 @@ fun EditProfileScreen(navController: NavController) {
                 value = phone,
                 onValueChange = { phone = it },
                 label = { Text("Phone Number") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(30.dp)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -119,7 +123,8 @@ fun EditProfileScreen(navController: NavController) {
                     label = { Text("Birth") },
                     readOnly = true,
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = false) },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(30.dp)
                 )
             }
 
@@ -132,7 +137,8 @@ fun EditProfileScreen(navController: NavController) {
                     label = { Text("Gender") },
                     readOnly = true,
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = false) },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(30.dp)
                 )
             }
 
@@ -143,8 +149,8 @@ fun EditProfileScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),
-                shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5C4AC5))
+                shape = RoundedCornerShape(30.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3C85DA))
             ) {
                 Icon(Icons.Default.Lock, contentDescription = "Lock", tint = Color.White)
                 Spacer(modifier = Modifier.width(8.dp))

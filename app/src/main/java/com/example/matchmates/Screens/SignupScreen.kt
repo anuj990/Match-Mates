@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.matchmates.ViewModel.AuthViewModel
 import com.example.matchmates.ViewModel.ProfileViewModel
 import com.example.matchmates.data.Profile
@@ -71,8 +72,7 @@ fun SignUpScreen(
 
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFCFE5E3)),
+            .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -93,7 +93,8 @@ fun SignUpScreen(
                 onValueChange = { email = it },
                 label = { Text("Email Id") },
                 leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(30.dp),
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -111,7 +112,8 @@ fun SignUpScreen(
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
+                shape = RoundedCornerShape(30.dp)
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -128,7 +130,8 @@ fun SignUpScreen(
                         Icon(imageVector = image, contentDescription = null)
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(30.dp),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -161,8 +164,8 @@ fun SignUpScreen(
                         }
                     }
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4B3179)),
-                shape = RoundedCornerShape(8.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3C85DA)),
+                shape = RoundedCornerShape(30.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(text = "Sign Up", color = Color.White)
@@ -174,7 +177,7 @@ fun SignUpScreen(
 
                 }
             }) {
-                Text(text = "Already have an account? Login", color = Color(0xFF1A237E))
+                Text(text = "Already have an account? Login", color = Color(0xFF2431B6))
             }
         }
     }
