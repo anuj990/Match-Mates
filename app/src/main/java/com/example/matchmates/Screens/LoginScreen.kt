@@ -157,7 +157,6 @@ fun LoginScreen(authViewModel: AuthViewModel, navController: NavHostController) 
 
                     Button(
                         onClick = {
-                            // Only call the login function here
                             authViewModel.login(email, password)
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3C85DA)),

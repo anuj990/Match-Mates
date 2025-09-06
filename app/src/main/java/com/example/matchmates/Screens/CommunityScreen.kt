@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.matchmates.R
 
-// ---------- Data Model ----------
 data class Hackathon(
     val title: String,
     val company: String,
@@ -63,7 +62,6 @@ fun CommunityScreen() {
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
 
-            // Search bar
             OutlinedTextField(
                 value = searchText,
                 onValueChange = { searchText = it },

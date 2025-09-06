@@ -54,7 +54,6 @@ fun MatchMatesNavigation(
             RegistrationScreen(profileViewModel, navController)
         }
 
-        // ✅ Corrected HomeScreen
         composable("HomeScreen") {
             HomeScreen(navController, profileViewModel)
         }

@@ -36,7 +36,6 @@ class ProfileRepository(
         }
     }
 
-    // New function to fetch all profiles except current user
     suspend fun getAllProfilesExcluding(currentUsername: String): List<Profile> {
         return try {
             val snapshot = profileCollection.get().await()
