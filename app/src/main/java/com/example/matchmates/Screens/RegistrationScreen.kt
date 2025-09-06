@@ -11,14 +11,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.material3.MenuAnchorType
+import androidx.navigation.NavController
+import com.example.matchmates.ViewModel.ProfileViewModel
+import com.example.matchmates.data.Profile
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegistrationScreen() {
+fun RegistrationScreen(
+    viewModel: ProfileViewModel,
+    navController: NavController
+) {
+    var name by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("") }
     var imageSelected by remember { mutableStateOf(false) }
 
     val skills = listOf("Android", "Web", "ML", "UI/UX", "DSA")
@@ -30,6 +36,18 @@ fun RegistrationScreen() {
     var selectedGoal by remember { mutableStateOf<String?>(null) }
 
     var otherSkill by remember { mutableStateOf("") }
+
+    val isSaving by viewModel.isSaving.collectAsState()
+    val errorMessage by viewModel.errorMessage.collectAsState()
+
+    // ✅ Navigate only when profile is saved successfully
+    LaunchedEffect(isSaving, errorMessage) {
+        if (!isSaving && errorMessage == null && name.isNotEmpty() && username.isNotEmpty()) {
+            navController.navigate("HomeScreen") {
+                popUpTo("Registration") { inclusive = true }
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -61,15 +79,19 @@ fun RegistrationScreen() {
                 }
             }
 
-            Button(
-                onClick = { imageSelected = !imageSelected },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Black,
-                    contentColor = Color.White
-                )
-            ) {
-                Text("Add Image")
-            }
+            OutlinedTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("Name") },
+                modifier = Modifier.fillMaxWidth(0.8f)
+            )
+
+            OutlinedTextField(
+                value = username,
+                onValueChange = { username = it },
+                label = { Text("Username") },
+                modifier = Modifier.fillMaxWidth(0.8f)
+            )
 
             ExposedDropdownMenuBox(
                 expanded = skillExpanded,
@@ -79,20 +101,11 @@ fun RegistrationScreen() {
                     value = if (selectedSkills.isEmpty()) "" else selectedSkills.joinToString(", "),
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text("Select Skills", color = Color.Black) },
+                    label = { Text("Select Skills") },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = skillExpanded) },
                     modifier = Modifier
                         .fillMaxWidth(0.8f)
-                        .menuAnchor(MenuAnchorType.PrimaryNotEditable) // ✅ new API
-                        .exposedDropdownSize(),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color.Black,
-                        unfocusedBorderColor = Color.Black,
-                        focusedLabelColor = Color.Black,
-                        unfocusedLabelColor = Color.Black,
-                        focusedTextColor = Color.Black,
-                        unfocusedTextColor = Color.Black
-                    )
+                        .menuAnchor()
                 )
 
                 ExposedDropdownMenu(
@@ -108,7 +121,7 @@ fun RegistrationScreen() {
                                         onCheckedChange = null
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Text(skill, color = Color.Black)
+                                    Text(skill)
                                 }
                             },
                             onClick = {
@@ -126,16 +139,8 @@ fun RegistrationScreen() {
             OutlinedTextField(
                 value = otherSkill,
                 onValueChange = { otherSkill = it },
-                label = { Text("Other Skill", color = Color.Black) },
-                modifier = Modifier.fillMaxWidth(0.8f),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color.Black,
-                    unfocusedBorderColor = Color.Black,
-                    focusedLabelColor = Color.Black,
-                    unfocusedLabelColor = Color.Black,
-                    focusedTextColor = Color.Black,
-                    unfocusedTextColor = Color.Black
-                )
+                label = { Text("Other Skill") },
+                modifier = Modifier.fillMaxWidth(0.8f)
             )
 
             ExposedDropdownMenuBox(
@@ -146,20 +151,11 @@ fun RegistrationScreen() {
                     value = selectedGoal ?: "",
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text("Select Goal", color = Color.Black) },
+                    label = { Text("Select Goal") },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = goalExpanded) },
                     modifier = Modifier
                         .fillMaxWidth(0.8f)
-                        .menuAnchor(MenuAnchorType.PrimaryNotEditable)
-                        .exposedDropdownSize(),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color.Black,
-                        unfocusedBorderColor = Color.Black,
-                        focusedLabelColor = Color.Black,
-                        unfocusedLabelColor = Color.Black,
-                        focusedTextColor = Color.Black,
-                        unfocusedTextColor = Color.Black
-                    )
+                        .menuAnchor()
                 )
 
                 ExposedDropdownMenu(
@@ -168,7 +164,7 @@ fun RegistrationScreen() {
                 ) {
                     goals.forEach { goal ->
                         DropdownMenuItem(
-                            text = { Text(goal, color = Color.Black) },
+                            text = { Text(goal) },
                             onClick = {
                                 selectedGoal = goal
                                 goalExpanded = false
@@ -180,24 +176,24 @@ fun RegistrationScreen() {
 
             Button(
                 onClick = {
-                    println("Selected Skills: $selectedSkills")
-                    println("Other Skill: $otherSkill")
-                    println("Selected Goal: $selectedGoal")
+                    val profile = Profile(
+                        name = name,
+                        username = username,
+                        skills = selectedSkills.toList(),
+                        otherSkill = otherSkill,
+                        goal = selectedGoal
+                    )
+                    viewModel.saveProfile(profile)
                 },
                 modifier = Modifier.fillMaxWidth(0.8f),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Black,
-                    contentColor = Color.White
-                )
+                enabled = !isSaving
             ) {
-                Text("Continue")
+                Text(if (isSaving) "Saving.." else "Continue")
+            }
+
+            errorMessage?.let {
+                Text("Error: $it", color = Color.Red)
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun RegistrationScreenPreview() {
-    RegistrationScreen()
 }

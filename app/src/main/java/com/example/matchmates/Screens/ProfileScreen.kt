@@ -17,9 +17,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(navController: NavHostController) {
     var isEditingSkills by remember { mutableStateOf(false) }
     var skillsText by remember { mutableStateOf("") }
 
@@ -80,7 +82,7 @@ fun ProfileScreen() {
                     }
                 }
 
-                IconButton(onClick = { /* Edit logic */ }) {
+                IconButton(onClick = { navController.navigate("EditProfileScreen") }) {
                     Icon(Icons.Default.Edit, contentDescription = "Edit", tint = Color.Gray)
                 }
             }
@@ -117,7 +119,11 @@ fun ProfileScreen() {
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = { /* Logout logic */ },
+            onClick = {
+                navController.navigate("LoginScreen") {
+                    popUpTo("ProfileScreen") { inclusive = true }
+                }
+            },
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6200EE)),
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -125,8 +131,6 @@ fun ProfileScreen() {
         }
 
         Spacer(modifier = Modifier.weight(1f))
-
-
     }
 }
 
@@ -207,5 +211,5 @@ fun ProfileOption(
 @Preview(showBackground = true)
 @Composable
 fun PreviewProfileScreen() {
-    ProfileScreen()
+    ProfileScreen(navController = rememberNavController())
 }
