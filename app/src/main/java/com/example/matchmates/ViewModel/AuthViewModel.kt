@@ -12,16 +12,23 @@ class AuthViewModel : ViewModel() {
     private val _authState = MutableLiveData<AuthState>()
     val authState: LiveData<AuthState> = _authState
 
+    private val authStateListener: FirebaseAuth.AuthStateListener
+
     init {
-        checkAuthStatus()
+        authStateListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+            val user: FirebaseUser? = firebaseAuth.currentUser
+            _authState.value = if (user != null) {
+                AuthState.Authenticated
+            } else {
+                AuthState.UnAuthenticated
+            }
+        }
+        auth.addAuthStateListener(authStateListener)
     }
 
-    private fun checkAuthStatus() {
-        if (auth.currentUser == null) {
-            _authState.value = AuthState.UnAuthenticated
-        } else {
-            _authState.value = AuthState.Authenticated(auth.currentUser!!)
-        }
+    override fun onCleared() {
+        super.onCleared()
+        auth.removeAuthStateListener(authStateListener)
     }
 
     fun login(email: String, password: String) {
@@ -29,13 +36,10 @@ class AuthViewModel : ViewModel() {
             _authState.value = AuthState.Error("Email or Password Can't Be Empty")
             return
         }
-
         _authState.value = AuthState.LoadingState
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    _authState.value = AuthState.Authenticated(auth.currentUser!!)
-                } else {
+                if (!task.isSuccessful) {
                     _authState.value = AuthState.Error(task.exception?.message ?: "Something Went Wrong")
                 }
             }
@@ -46,13 +50,10 @@ class AuthViewModel : ViewModel() {
             _authState.value = AuthState.Error("Email or Password Can't Be Empty")
             return
         }
-
         _authState.value = AuthState.LoadingState
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    _authState.value = AuthState.Authenticated(auth.currentUser!!)
-                } else {
+                if (!task.isSuccessful) {
                     _authState.value = AuthState.Error(task.exception?.message ?: "Something Went Wrong")
                 }
             }
@@ -60,11 +61,10 @@ class AuthViewModel : ViewModel() {
 
     fun signOut() {
         auth.signOut()
-        _authState.value = AuthState.UnAuthenticated
     }
 
     sealed class AuthState {
-        data class Authenticated(val user: FirebaseUser) : AuthState()
+        object Authenticated : AuthState()
         object UnAuthenticated : AuthState()
         object LoadingState : AuthState()
         data class Error(val message: String) : AuthState()

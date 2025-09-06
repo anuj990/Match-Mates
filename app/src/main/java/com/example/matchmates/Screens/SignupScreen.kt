@@ -24,6 +24,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
 import androidx.navigation.NavController
 import com.example.matchmates.ViewModel.AuthViewModel
 import com.example.matchmates.ViewModel.ProfileViewModel
@@ -165,6 +166,15 @@ fun SignUpScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(text = "Sign Up", color = Color.White)
+            }
+
+            TextButton(onClick = {
+                navController.navigate("LoginScreen"){
+                    popUpTo("SignupScreen") { inclusive = true }
+
+                }
+            }) {
+                Text(text = "Already have an account? Login", color = Color(0xFF1A237E))
             }
         }
     }

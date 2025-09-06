@@ -40,7 +40,6 @@ fun RegistrationScreen(
     val isSaving by viewModel.isSaving.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
 
-    // ✅ Navigate only when profile is saved successfully
     LaunchedEffect(isSaving, errorMessage) {
         if (!isSaving && errorMessage == null && name.isNotEmpty() && username.isNotEmpty()) {
             navController.navigate("HomeScreen") {

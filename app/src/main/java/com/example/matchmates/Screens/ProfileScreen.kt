@@ -121,7 +121,7 @@ fun ProfileScreen(navController: NavHostController) {
         Button(
             onClick = {
                 navController.navigate("LoginScreen") {
-                    popUpTo("ProfileScreen") { inclusive = true }
+                    popUpTo("HomeScreen") { inclusive = true }
                 }
             },
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6200EE)),

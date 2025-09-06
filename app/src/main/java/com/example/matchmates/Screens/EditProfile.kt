@@ -139,7 +139,7 @@ fun EditProfileScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = { /* Change Password */ },
+                onClick = { },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),

@@ -113,7 +113,6 @@ fun ChatScreen(
         }
     }
 
-    // auto-scroll to bottom on new message
     LaunchedEffect(messages.size) {
         if (messages.isNotEmpty()) {
             listState.animateScrollToItem(messages.lastIndex)

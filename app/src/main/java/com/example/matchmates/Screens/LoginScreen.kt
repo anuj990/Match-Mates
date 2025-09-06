@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.matchmates.ViewModel.AuthViewModel
+import com.example.matchmates.data.Profile
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,15 +34,18 @@ fun LoginScreen(authViewModel: AuthViewModel, navController: NavHostController) 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showPassword by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
     val authState by authViewModel.authState.observeAsState()
 
-    // ✅ handle navigation after login
     LaunchedEffect(authState) {
-        when (authState) {
+        when (val state = authState) {
             is AuthViewModel.AuthState.Authenticated -> {
                 navController.navigate("HomeScreen") {
                     popUpTo("LoginScreen") { inclusive = true }
                 }
+            }
+            is AuthViewModel.AuthState.Error -> {
+                errorMessage = state.message
             }
             else -> {}
         }
@@ -98,7 +102,12 @@ fun LoginScreen(authViewModel: AuthViewModel, navController: NavHostController) 
                         value = email,
                         onValueChange = { email = it },
                         label = { Text("Email Id") },
-                        leadingIcon = { Icon(imageVector = Icons.Default.Person, contentDescription = null) },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Person,
+                                contentDescription = null
+                            )
+                        },
                         modifier = Modifier.fillMaxWidth()
                     )
 
@@ -109,9 +118,15 @@ fun LoginScreen(authViewModel: AuthViewModel, navController: NavHostController) 
                         onValueChange = { password = it },
                         label = { Text("Password") },
                         visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
-                        leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = null) },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Lock,
+                                contentDescription = null
+                            )
+                        },
                         trailingIcon = {
-                            val image = if (showPassword) Icons.Default.Visibility else Icons.Default.VisibilityOff
+                            val image =
+                                if (showPassword) Icons.Default.Visibility else Icons.Default.VisibilityOff
                             val description = if (showPassword) "Hide password" else "Show password"
                             IconButton(onClick = { showPassword = !showPassword }) {
                                 Icon(imageVector = image, contentDescription = description)
@@ -137,7 +152,10 @@ fun LoginScreen(authViewModel: AuthViewModel, navController: NavHostController) 
                     Spacer(modifier = Modifier.height(20.dp))
 
                     Button(
-                        onClick = { authViewModel.login(email, password) },
+                        onClick = {
+                            // Only call the login function here
+                            authViewModel.login(email, password)
+                        },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF5722)),
                         shape = RoundedCornerShape(8.dp),
                         modifier = Modifier.fillMaxWidth()
@@ -145,10 +163,18 @@ fun LoginScreen(authViewModel: AuthViewModel, navController: NavHostController) 
                         Text(text = "Login", color = Color.White)
                     }
 
+                    errorMessage?.let {
+                        Text(
+                            text = it,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                    }
+
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    TextButton(onClick = { navController.navigate("Registration") }) {
-                        Text("Don’t have an account? Register", color = Color(0xFF1A237E))
+                    TextButton(onClick = { navController.navigate("SignUpScreen") }) {
+                        Text("Don’t have an account?", color = Color(0xFF1A237E))
                     }
                 }
             }

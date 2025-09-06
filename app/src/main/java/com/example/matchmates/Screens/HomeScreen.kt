@@ -34,7 +34,7 @@ fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier) 
             TopAppBar(
                 title = { Text(text = "Match Mates", modifier = Modifier) },
                 actions = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = { /* TODO: Implement search navigation */ }) {
                         Icon(
                             imageVector = Icons.Default.Search,
                             contentDescription = "Search",
@@ -59,7 +59,8 @@ fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier) 
                         )
                     }
 
-                    IconButton(onClick = { navController.navigate("GroupsScreen") }) {
+
+                    IconButton(onClick = {  }) {
                         Icon(
                             imageVector = Icons.Default.Groups,
                             contentDescription = null,
@@ -67,7 +68,7 @@ fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier) 
                         )
                     }
 
-                    IconButton(onClick = { navController.navigate("ChatScreen") }) {
+                    IconButton(onClick = { navController.navigate("friends") }) {
                         Icon(
                             imageVector = Icons.Default.Chat,
                             contentDescription = null,
@@ -86,8 +87,5 @@ fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier) 
             }
         }
     ) {
-
     }
 }
-
-
