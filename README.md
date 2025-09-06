@@ -77,4 +77,4 @@ Supports both users & organizers, making it a community-driven platform.
 
 
 Clone the repository
-git clone https://github.com/your-username/matchmates.git
+git clone https://github.com/anuj990/matchmates.git
