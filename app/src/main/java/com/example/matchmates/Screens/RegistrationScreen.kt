@@ -11,16 +11,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.matchmates.ViewModel.ProfileViewModel
 import com.example.matchmates.data.Profile
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegistrationScreen(viewModel: ProfileViewModel) {
-
+fun RegistrationScreen(
+    viewModel: ProfileViewModel,
+    navController: NavController
+) {
     var name by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var imageSelected by remember { mutableStateOf(false) }
@@ -37,6 +39,15 @@ fun RegistrationScreen(viewModel: ProfileViewModel) {
 
     val isSaving by viewModel.isSaving.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
+
+    // ✅ Navigate only when profile is saved successfully
+    LaunchedEffect(isSaving, errorMessage) {
+        if (!isSaving && errorMessage == null && name.isNotEmpty() && username.isNotEmpty()) {
+            navController.navigate("HomeScreen") {
+                popUpTo("Registration") { inclusive = true }
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -92,7 +103,9 @@ fun RegistrationScreen(viewModel: ProfileViewModel) {
                     readOnly = true,
                     label = { Text("Select Skills") },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = skillExpanded) },
-                    modifier = Modifier.fillMaxWidth(0.8f).menuAnchor()
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f)
+                        .menuAnchor()
                 )
 
                 ExposedDropdownMenu(
@@ -130,7 +143,6 @@ fun RegistrationScreen(viewModel: ProfileViewModel) {
                 modifier = Modifier.fillMaxWidth(0.8f)
             )
 
-            // Goal Dropdown
             ExposedDropdownMenuBox(
                 expanded = goalExpanded,
                 onExpandedChange = { goalExpanded = !goalExpanded }
@@ -141,7 +153,9 @@ fun RegistrationScreen(viewModel: ProfileViewModel) {
                     readOnly = true,
                     label = { Text("Select Goal") },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = goalExpanded) },
-                    modifier = Modifier.fillMaxWidth(0.8f).menuAnchor()
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f)
+                        .menuAnchor()
                 )
 
                 ExposedDropdownMenu(
@@ -177,15 +191,9 @@ fun RegistrationScreen(viewModel: ProfileViewModel) {
                 Text(if (isSaving) "Saving.." else "Continue")
             }
 
-            if (errorMessage != null) {
-                Text("Error: $errorMessage", color = Color.Red)
+            errorMessage?.let {
+                Text("Error: $it", color = Color.Red)
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun RegistrationScreenPreview() {
-    RegistrationScreen(viewModel = ProfileViewModel())
 }

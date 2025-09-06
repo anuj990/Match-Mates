@@ -14,7 +14,6 @@ import com.example.matchmates.Screens.HomeScreen
 import com.example.matchmates.Screens.RegistrationScreen
 import com.example.matchmates.ViewModel.AuthViewModel
 import com.example.matchmates.ViewModel.ProfileViewModel
-import com.example.matchmates.chat.ChatAppUi
 import com.example.matchmates.data.ProfileRepository
 import com.example.matchmates.ui.theme.MatchMatesTheme
 import com.google.firebase.auth.FirebaseAuth
@@ -26,44 +25,42 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MatchMatesTheme {
-                ChatAppUi()
-//                val auth = FirebaseAuth.getInstance()
-//                val user = auth.currentUser
-//                val repository = ProfileRepository()
-//
-//                var destination by remember { mutableStateOf<String?>(null) }
-//                val scope = rememberCoroutineScope()
-//
-//                LaunchedEffect(user) {
-//                    if (user == null) {
-//                        destination = "SignUp"
-//                    } else {
-//                        scope.launch {
-//                            val exists = repository.isProfileExists(user.uid)
-//                            destination = if (exists) "Home" else "Registration"
-//                        }
-//                    }
-//                }
-//
-//                when (destination) {
-//                    null -> {
-//                        Box(
-//                            modifier = Modifier.fillMaxSize(),
-//                            contentAlignment = Alignment.Center
-//                        ) {
-//                            CircularProgressIndicator()
-//                        }
-//                    }
-//                    "SignUp" -> SignUpScreen(
-//                        authViewModel = AuthViewModel(),
-//                        profileViewModel = ProfileViewModel(),
-//                        onNavigateToRegistration = { destination = "Registration" }
-//                    )
-//                    "Registration" -> RegistrationScreen(viewModel = ProfileViewModel())
-//                    "Home" -> HomeScreen()
-//                }
-//            }
+                val auth = FirebaseAuth.getInstance()
+                val user = auth.currentUser
+                val repository = ProfileRepository()
+
+                var destination by remember { mutableStateOf<String?>(null) }
+                val scope = rememberCoroutineScope()
+
+                LaunchedEffect(user) {
+                    if (user == null) {
+                        destination = "SignUp"
+                    } else {
+                        scope.launch {
+                            val exists = repository.isProfileExists(user.uid)
+                            destination = if (exists) "Home" else "Registration"
+                        }
+                    }
+                }
+
+                when (destination) {
+                    null -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                    "SignUp" -> SignUpScreen(
+                        authViewModel = AuthViewModel(),
+                        profileViewModel = ProfileViewModel(),
+                        onNavigateToRegistration = { destination = "Registration" }
+                    )
+                    "Registration" -> RegistrationScreen(viewModel = ProfileViewModel())
+                    "Home" -> HomeScreen()
+                }
+            }
         }
     }
-}
 }
