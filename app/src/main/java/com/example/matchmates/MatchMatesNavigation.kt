@@ -1,7 +1,5 @@
 package com.example.matchmates
 
-// In MainActivity.kt
-// In MainActivity.kt or a new file like AppNavigation.kt
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -14,6 +12,7 @@ import com.example.matchmates.chat.ChatScreen
 import com.example.matchmates.ViewModel.AuthViewModel
 import com.example.matchmates.ViewModel.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.example.matchmates.Screens.CommunityScreen
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import android.net.Uri
@@ -21,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.example.matchmates.Screens.LoginScreen
 import com.example.matchmates.Screens.RegistrationScreen
+import com.example.matchmates.Screens.SearchScreen
 import com.example.matchmates.chat.makeChatId
 
 @Composable
@@ -29,7 +29,6 @@ fun MatchMatesNavigation(
     profileViewModel: ProfileViewModel
 ) {
     val navController = rememberNavController()
-
 
     val startDestination = remember {
         if (FirebaseAuth.getInstance().currentUser != null) {
@@ -55,8 +54,9 @@ fun MatchMatesNavigation(
             RegistrationScreen(profileViewModel, navController)
         }
 
+        // ✅ Corrected HomeScreen
         composable("HomeScreen") {
-            HomeScreen(navController)
+            HomeScreen(navController, profileViewModel)
         }
 
         composable("ProfileScreen") {
@@ -66,6 +66,15 @@ fun MatchMatesNavigation(
         composable("EditProfileScreen") {
             EditProfileScreen(navController)
         }
+        composable("SearchScreen") {
+            SearchScreen(navController)
+        }
+        composable("CommunityScreen") {
+            CommunityScreen()
+        }
+
+
+
 
         composable("friends") {
             FriendListScreen(
@@ -96,3 +105,7 @@ fun MatchMatesNavigation(
         }
     }
 }
+
+
+
+
