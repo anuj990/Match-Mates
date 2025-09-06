@@ -28,5 +28,14 @@ class ProfileRepository(
             false
         }
     }
+    suspend fun getProfilesByIds(userIds: List<String>): List<Profile> {
+        return try {
+            val snapshot = profileCollection.whereIn("username", userIds).get().await()
+            snapshot.toObjects(Profile::class.java)
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
 
 }

@@ -12,6 +12,16 @@ class ProfileViewModel(
     private val repository: ProfileRepository = ProfileRepository()
 ) : ViewModel() {
 
+    private val _friends = MutableStateFlow<List<Profile>>(emptyList())
+    val friends = _friends.asStateFlow()
+
+    fun loadFriends(userIds: List<String>) {
+        viewModelScope.launch {
+            val profiles = repository.getProfilesByIds(userIds)
+            _friends.value = profiles // ✅ use Profile directly
+        }
+    }
+
     private val _isSaving = MutableStateFlow(false)
     val isSaving = _isSaving.asStateFlow()
 
