@@ -65,7 +65,7 @@ fun JobListingScreen() {
                         modifier = Modifier.fillMaxWidth(),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("Hackathon Community", color = Color.White)
+                        Text("Hackathons Community", color = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
