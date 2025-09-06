@@ -3,6 +3,7 @@ package com.example.matchmates.Screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
@@ -82,14 +83,16 @@ fun RegistrationScreen(
                 value = name,
                 onValueChange = { name = it },
                 label = { Text("Name") },
-                modifier = Modifier.fillMaxWidth(0.8f)
+                modifier = Modifier.fillMaxWidth(0.8f),
+                shape = RoundedCornerShape(30.dp)
             )
 
             OutlinedTextField(
                 value = username,
                 onValueChange = { username = it },
                 label = { Text("Username") },
-                modifier = Modifier.fillMaxWidth(0.8f)
+                modifier = Modifier.fillMaxWidth(0.8f),
+                shape = RoundedCornerShape(30.dp)
             )
 
             ExposedDropdownMenuBox(
@@ -104,7 +107,8 @@ fun RegistrationScreen(
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = skillExpanded) },
                     modifier = Modifier
                         .fillMaxWidth(0.8f)
-                        .menuAnchor()
+                        .menuAnchor(),
+                    shape = RoundedCornerShape(30.dp)
                 )
 
                 ExposedDropdownMenu(
@@ -139,7 +143,8 @@ fun RegistrationScreen(
                 value = otherSkill,
                 onValueChange = { otherSkill = it },
                 label = { Text("Other Skill") },
-                modifier = Modifier.fillMaxWidth(0.8f)
+                modifier = Modifier.fillMaxWidth(0.8f),
+                shape = RoundedCornerShape(30.dp)
             )
 
             ExposedDropdownMenuBox(
@@ -154,7 +159,8 @@ fun RegistrationScreen(
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = goalExpanded) },
                     modifier = Modifier
                         .fillMaxWidth(0.8f)
-                        .menuAnchor()
+                        .menuAnchor(),
+                    shape = RoundedCornerShape(30.dp)
                 )
 
                 ExposedDropdownMenu(

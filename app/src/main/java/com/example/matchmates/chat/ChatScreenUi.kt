@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Send
@@ -12,7 +13,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.wear.compose.material.Colors
 import com.google.firebase.firestore.ListenerRegistration
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,9 +65,14 @@ fun ChatScreen(
                 TextField(
                     value = input,
                     onValueChange = { input = it },
-                    modifier = Modifier.weight(1f),
-                    placeholder = { Text("Type a message") }
+                    modifier = Modifier
+                        .weight(1f)
+                        .clip(RoundedCornerShape(30.dp)),
+                    shape = RoundedCornerShape(30.dp),
+                    placeholder = { Text("Type a message") },
+
                 )
+
 
                 IconButton(onClick = {
                     val txt = input.trim()

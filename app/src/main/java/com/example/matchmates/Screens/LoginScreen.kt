@@ -1,5 +1,6 @@
 package com.example.matchmates.Screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -22,9 +23,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.matchmates.ViewModel.AuthViewModel
 import com.example.matchmates.data.Profile
 
@@ -53,8 +56,7 @@ fun LoginScreen(authViewModel: AuthViewModel, navController: NavHostController) 
 
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFE0F2F1)),
+            .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -65,7 +67,7 @@ fun LoginScreen(authViewModel: AuthViewModel, navController: NavHostController) 
                 text = "Login to your Account",
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF1A237E)
+                color = Color(0xFF2743A9)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -74,7 +76,7 @@ fun LoginScreen(authViewModel: AuthViewModel, navController: NavHostController) 
                 modifier = Modifier
                     .size(80.dp)
                     .clip(CircleShape)
-                    .background(Color(0xFF1A237E)),
+                    .background(Color(0xFF3C85DA)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -108,7 +110,8 @@ fun LoginScreen(authViewModel: AuthViewModel, navController: NavHostController) 
                                 contentDescription = null
                             )
                         },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(30.dp)
                     )
 
                     Spacer(modifier = Modifier.height(12.dp))
@@ -136,7 +139,8 @@ fun LoginScreen(authViewModel: AuthViewModel, navController: NavHostController) 
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Password,
                             imeAction = ImeAction.Done
-                        )
+                        ),
+                        shape = RoundedCornerShape(30.dp)
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -156,9 +160,9 @@ fun LoginScreen(authViewModel: AuthViewModel, navController: NavHostController) 
                             // Only call the login function here
                             authViewModel.login(email, password)
                         },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF5722)),
-                        shape = RoundedCornerShape(8.dp),
-                        modifier = Modifier.fillMaxWidth()
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3C85DA)),
+                        shape = RoundedCornerShape(30.dp),
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
                         Text(text = "Login", color = Color.White)
                     }
@@ -181,3 +185,4 @@ fun LoginScreen(authViewModel: AuthViewModel, navController: NavHostController) 
         }
     }
 }
+

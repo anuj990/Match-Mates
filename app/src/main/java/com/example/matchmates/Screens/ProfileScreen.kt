@@ -61,7 +61,7 @@ fun ProfileScreen(navController: NavHostController) {
                         modifier = Modifier
                             .size(75.dp)
                             .clip(CircleShape)
-                            .background(Color(0xFF6200EE))
+                            .background(Color(0xFF3C85DA))
                             .padding(12.dp)
                     )
 
@@ -91,7 +91,7 @@ fun ProfileScreen(navController: NavHostController) {
         Spacer(modifier = Modifier.height(24.dp))
 
         ExpandableInputSection(
-            icon = Icons.Default.Accessibility,
+            icon = Icons.Default.Lightbulb,
             title = "Skills",
             isEditing = isEditingSkills,
             textValue = skillsText,
@@ -124,7 +124,7 @@ fun ProfileScreen(navController: NavHostController) {
                     popUpTo("HomeScreen") { inclusive = true }
                 }
             },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6200EE)),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3C85DA)),
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Log Out", color = Color.White)

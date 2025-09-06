@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class ProfileViewModel(
+open class ProfileViewModel(
     private val repository: ProfileRepository = ProfileRepository()
 ) : ViewModel() {
 
