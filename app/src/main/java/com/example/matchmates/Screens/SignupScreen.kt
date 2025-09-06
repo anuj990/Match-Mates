@@ -58,7 +58,7 @@ fun SignUpScreen(
                     goal = ""
                 )
                 profileViewModel.saveProfile(profile)
-                navController.navigate("RegistrationSkillScreen") {
+                navController.navigate("Registration") {
                     popUpTo("SignUpScreen") { inclusive = true }
                 }
             }
@@ -170,7 +170,7 @@ fun SignUpScreen(
 
             TextButton(onClick = {
                 navController.navigate("LoginScreen"){
-                    popUpTo("SignupScreen") { inclusive = true }
+                    popUpTo("SignUpScreen") { inclusive = true }
 
                 }
             }) {
