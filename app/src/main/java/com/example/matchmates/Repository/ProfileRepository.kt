@@ -16,20 +16,19 @@ class ProfileRepository(
             Result.failure(e)
         }
     }
+
     suspend fun isProfileExists(uid: String): Boolean {
         return try {
-            val snapshot = FirebaseFirestore.getInstance()
-                .collection("profiles")
-                .document(uid)
-                .get()
-                .await()
+            val snapshot = firestore.collection("profiles").document(uid).get().await()
             snapshot.exists()
         } catch (e: Exception) {
             false
         }
     }
+
     suspend fun getProfilesByIds(userIds: List<String>): List<Profile> {
         return try {
+            if(userIds.isEmpty()) return emptyList()
             val snapshot = profileCollection.whereIn("username", userIds).get().await()
             snapshot.toObjects(Profile::class.java)
         } catch (e: Exception) {
@@ -37,6 +36,14 @@ class ProfileRepository(
         }
     }
 
-
+    // New function to fetch all profiles except current user
+    suspend fun getAllProfilesExcluding(currentUsername: String): List<Profile> {
+        return try {
+            val snapshot = profileCollection.get().await()
+            snapshot.toObjects(Profile::class.java)
+                .filter { it.username != currentUsername }
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
 }
-
